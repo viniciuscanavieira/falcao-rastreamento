@@ -3,166 +3,681 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Falcão Rastreamento Veicular — Monitoramento em tempo real</title>
+<title>Falcão Rastreamento — Promoção de Inauguração</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-deep:#04070f;
-    --bg-navy:#070d20;
-    --bg-panel:#0a1330;
-    --bg-panel-2:#0d1a42;
-    --blue-900:#071842;
-    --blue-700:#0c3aa6;
-    --blue-600:#154fd1;
-    --blue-500:#2f6bff;
-    --blue-400:#5b8cff;
-    --cyan-300:#8fd3ff;
-    --cyan-100:#dcf0ff;
-    --white:#ffffff;
-    --ice:#eaf2ff;
-    --muted:#93a4d1;
-    --line:rgba(143,211,255,0.14);
-    --shadow-glow:0 0 60px rgba(47,107,255,0.35);
-    --radius-lg:28px;
-    --radius-md:18px;
-    --radius-sm:10px;
-    --ff-display:'Rajdhani', sans-serif;
-    --ff-body:'Manrope', sans-serif;
-    --ff-mono:'Space Mono', monospace;
+    --navy-deep:#070f24;
+    --navy-mid:#0c1c42;
+    --navy-panel:#0f2456;
+    --navy-line:#213865;
+    --gold:#f5b400;
+    --gold-bright:#ffd666;
+    --red:#e6484b;
+    --ice:#eef2ff;
+    --ice-dim:#9fb0d9;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
+
   html{scroll-behavior:smooth;}
+
   body{
-    font-family:var(--ff-body);
-    background:var(--bg-deep);
+    background:var(--navy-deep);
     color:var(--ice);
+    font-family:'Inter', sans-serif;
     overflow-x:hidden;
-    line-height:1.5;
+    position:relative;
   }
-  img{max-width:100%; display:block;}
-  a{color:inherit; text-decoration:none;}
-  ul{list-style:none;}
-  button{font-family:inherit; cursor:pointer;}
 
-  .container{
-    width:100%;
-    max-width:1200px;
+  /* ===== radar background signature ===== */
+  .radar-field{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(245,180,0,0.10) 0%, rgba(245,180,0,0) 45%),
+      var(--navy-deep);
+    overflow:hidden;
+  }
+  .radar-ring{
+    position:absolute;
+    top:14%;
+    left:50%;
+    border:1px solid rgba(245,180,0,0.14);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+  }
+  .radar-ring.r1{width:340px;height:340px;}
+  .radar-ring.r2{width:560px;height:560px;border-color:rgba(245,180,0,0.09);}
+  .radar-ring.r3{width:800px;height:800px;border-color:rgba(245,180,0,0.05);}
+  .radar-sweep{
+    position:absolute;
+    top:14%;
+    left:50%;
+    width:800px;
+    height:800px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:conic-gradient(from 0deg, rgba(245,180,0,0.22), rgba(245,180,0,0) 22%);
+    animation:spin 6s linear infinite;
+    mix-blend-mode:screen;
+  }
+  @keyframes spin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+  .blip{
+    position:absolute;
+    width:6px;height:6px;
+    border-radius:50%;
+    background:var(--gold-bright);
+    box-shadow:0 0 8px 2px rgba(255,214,102,0.8);
+    animation:ping 2.6s ease-in-out infinite;
+  }
+  @keyframes ping{
+    0%,100%{opacity:0.15; transform:scale(0.8);}
+    50%{opacity:1; transform:scale(1.3);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .radar-sweep{animation:none;}
+    .blip{animation:none; opacity:0.6;}
+  }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width:520px;
     margin:0 auto;
-    padding:0 24px;
+    padding:0 20px;
   }
 
-  ::selection{background:var(--blue-500); color:var(--white);}
+  /* ===== hero ===== */
+  header.hero{
+    padding:36px 0 18px;
+    text-align:center;
+  }
+  .logo{
+    width:112px;
+    height:auto;
+    filter:drop-shadow(0 0 18px rgba(245,180,0,0.25));
+    margin-bottom:6px;
+  }
+  .brand-name{
+    font-family:'Anton', sans-serif;
+    font-size:2.5rem;
+    letter-spacing:0.03em;
+    color:var(--ice);
+    line-height:1;
+  }
+  .brand-sub{
+    font-family:'Oswald', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.35em;
+    color:var(--gold);
+    margin-top:6px;
+    text-transform:uppercase;
+  }
 
-  /* Background texture shared across dark sections */
-  .hex-bg{
-    position:absolute; inset:0;
-    background-image:
-      radial-gradient(circle at 15% 20%, rgba(47,107,255,0.16), transparent 40%),
-      radial-gradient(circle at 85% 10%, rgba(91,140,255,0.14), transparent 45%),
-      radial-gradient(circle at 50% 100%, rgba(12,58,166,0.25), transparent 50%);
+  .event-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin:22px 0 14px;
+    padding:8px 16px;
+    border:1px solid rgba(245,180,0,0.4);
+    border-radius:999px;
+    font-family:'Oswald', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    background:rgba(245,180,0,0.06);
+  }
+  .event-badge .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 8px 2px rgba(230,72,75,0.7);
+    animation:ping 1.6s ease-in-out infinite;
+  }
+
+  h1.headline{
+    font-family:'Anton', sans-serif;
+    font-size:2.55rem;
+    line-height:1.02;
+    letter-spacing:0.01em;
+    color:var(--ice);
+    margin-bottom:14px;
+  }
+  h1.headline span{color:var(--gold);}
+
+  .hero-copy{
+    font-size:1rem;
+    color:var(--ice-dim);
+    line-height:1.55;
+    max-width:420px;
+    margin:0 auto 26px;
+  }
+
+  /* ===== urgency strip ===== */
+  .urgency-strip{
+    background:linear-gradient(90deg, var(--gold), var(--gold-bright));
+    color:var(--navy-deep);
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size:0.86rem;
+    letter-spacing:0.02em;
+    text-align:center;
+    padding:12px 16px;
+    border-radius:12px;
+    margin-bottom:30px;
+  }
+  .urgency-strip strong{font-weight:700;}
+
+  /* ===== pricing cards ===== */
+  .section-label{
+    font-family:'Oswald', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+    text-align:center;
+    margin-bottom:14px;
+  }
+
+  .cards{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-bottom:26px;
+  }
+
+  .card{
+    background:linear-gradient(160deg, var(--navy-panel), var(--navy-mid));
+    border:1px solid var(--navy-line);
+    border-radius:18px;
+    padding:22px 20px 20px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    top:-40%;
+    right:-30%;
+    width:220px;height:220px;
+    background:radial-gradient(circle, rgba(245,180,0,0.12), transparent 70%);
     pointer-events:none;
   }
-
-  /* ============ HEADER ============ */
-  header{
-    position:sticky; top:0; z-index:100;
-    background:rgba(4,7,15,0.82);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);
+  .card-top{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+    text-align:center;
   }
-  .nav-wrap{
-    display:flex; align-items:center; justify-content:space-between;
-    height:78px;
+  .plan-name{
+    font-family:'Anton', sans-serif;
+    font-size:1.5rem;
+    letter-spacing:0.02em;
   }
-  .brand{display:flex; align-items:center; gap:12px;}
-  .brand img{width:44px; height:44px; border-radius:50%;}
-  .brand-name{
-    font-family:var(--ff-display); font-weight:700; font-size:1.35rem;
-    letter-spacing:0.04em; color:var(--white);
-    display:flex; flex-direction:column; line-height:1;
+  .plan-tag{
+    font-family:'Oswald', sans-serif;
+    font-size:0.68rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--ice-dim);
+    display:block;
+    margin-top:2px;
   }
-  .brand-name span{
-    font-family:var(--ff-mono); font-size:0.55rem; letter-spacing:0.18em;
-    color:var(--cyan-300); font-weight:400; margin-top:4px;
-  }
-  nav.links{display:flex; gap:36px;}
-  nav.links a{
-    font-size:0.92rem; font-weight:600; color:var(--muted);
-    position:relative; transition:color .2s;
-  }
-  nav.links a:hover{color:var(--white);}
-  nav.links a::after{
-    content:''; position:absolute; left:0; bottom:-6px; height:2px; width:0;
-    background:var(--blue-500); transition:width .25s;
-  }
-  nav.links a:hover::after{width:100%;}
-
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    padding:13px 26px; border-radius:999px; font-weight:700; font-size:0.92rem;
-    border:none; transition:transform .18s ease, box-shadow .18s ease, background .18s;
-    white-space:nowrap;
-  }
-  .btn-primary{
-    background:linear-gradient(135deg, var(--blue-400), var(--blue-600));
-    color:var(--white);
-    box-shadow:0 8px 24px rgba(47,107,255,0.45);
-  }
-  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 32px rgba(47,107,255,0.6);}
-  .btn-ghost{
-    background:transparent; color:var(--ice);
-    border:1.5px solid rgba(234,242,255,0.35);
-  }
-  .btn-ghost:hover{border-color:var(--cyan-300); color:var(--cyan-300);}
-  .btn-block{width:100%;}
-  .menu-toggle{display:none; background:none; border:none;}
-  .menu-toggle span{
-    display:block; width:26px; height:2px; background:var(--white); margin:6px 0; border-radius:2px;
+  .plan-icon{
+    width:180px;
+    height:110px;
+    border-radius:12px;
+    border:1px solid rgba(0,0,0,0.18);
+    display:block;
+    flex-shrink:0;
+    object-fit:cover;
+    background:#0f1b33;
+    box-shadow:0 10px 30px rgba(2,6,23,0.6), inset 0 -6px 18px rgba(0,0,0,0.25);
   }
 
-  /* Keep the original full page content */
+  .price-row{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:6px;
+  }
+  .price-old{
+    font-size:0.95rem;
+    color:var(--ice-dim);
+    text-decoration:line-through;
+    text-decoration-color:var(--red);
+  }
+  .price-new{
+    font-family:'Anton', sans-serif;
+    font-size:2.1rem;
+    color:var(--gold-bright);
+    line-height:1;
+  }
+  .price-new small{
+    font-family:'Inter', sans-serif;
+    font-size:0.95rem;
+    font-weight:600;
+    color:var(--ice-dim);
+  }
+  .price-note{
+    font-size:0.78rem;
+    color:var(--ice-dim);
+    margin-bottom:14px;
+  }
+  .price-note b{color:var(--gold-bright); font-weight:600;}
+
+  .divider{
+    height:1px;
+    background:var(--navy-line);
+    margin:14px 0;
+  }
+
+  .install-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .install-label{
+    font-family:'Oswald', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ice-dim);
+  }
+  .install-price{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .install-price .old{
+    font-size:0.85rem;
+    color:var(--ice-dim);
+    text-decoration:line-through;
+    text-decoration-color:var(--red);
+  }
+  .install-price .new{
+    font-family:'Anton', sans-serif;
+    font-size:1.3rem;
+    color:var(--gold-bright);
+  }
+
+  /* ===== CTA ===== */
+  .cta-block{
+    text-align:center;
+    padding:8px 0 34px;
+  }
+  .cta-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    max-width:400px;
+    background:var(--gold);
+    color:var(--navy-deep);
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    text-decoration:none;
+    padding:17px 20px;
+    border-radius:14px;
+    box-shadow:0 10px 30px -8px rgba(245,180,0,0.55);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cta-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 34px -8px rgba(245,180,0,0.7);
+  }
+  .cta-sub{
+    margin-top:12px;
+    font-size:0.78rem;
+    color:var(--ice-dim);
+  }
+
+  /* ===== marketing strip ===== */
+  .daily-price-section{
+    margin-bottom:30px;
+  }
+  .daily-price-hero{
+    text-align:center;
+    margin-bottom:20px;
+  }
+  .daily-price-hero h2{
+    font-family:'Anton', sans-serif;
+    font-size:1.8rem;
+    color:var(--ice);
+    margin-bottom:6px;
+    letter-spacing:0.01em;
+  }
+  .daily-price-hero p{
+    font-size:0.95rem;
+    color:var(--ice-dim);
+    line-height:1.4;
+  }
+  .daily-price-cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .daily-price-card{
+    background:linear-gradient(160deg, rgba(245,180,0,0.12), rgba(245,180,0,0.04));
+    border:2px solid var(--gold);
+    border-radius:14px;
+    padding:18px 14px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .daily-price-card::before{
+    content:"";
+    position:absolute;
+    top:-50%;right:-50%;
+    width:150px;height:150px;
+    background:radial-gradient(circle, rgba(245,180,0,0.15), transparent 70%);
+    pointer-events:none;
+  }
+  .daily-price-card > *{
+    position:relative;
+    z-index:1;
+  }
+  .daily-price-vehicle{
+    font-family:'Anton', sans-serif;
+    font-size:1.2rem;
+    color:var(--gold-bright);
+    margin-bottom:8px;
+    letter-spacing:0.02em;
+  }
+  .daily-price-amount{
+    font-family:'Anton', sans-serif;
+    font-size:2.2rem;
+    color:var(--red);
+    line-height:1;
+    margin-bottom:2px;
+  }
+  .daily-price-small{
+    font-size:0.75rem;
+    color:var(--ice-dim);
+    margin-bottom:10px;
+  }
+  .price-comparison{
+    background:rgba(0,0,0,0.2);
+    border-radius:8px;
+    padding:8px;
+    font-size:0.7rem;
+    color:var(--ice);
+    line-height:1.3;
+  }
+  .price-comparison strong{
+    color:var(--gold-bright);
+    font-weight:700;
+  }
+  .daily-price-cta{
+    background:linear-gradient(90deg, var(--gold), var(--gold-bright));
+    color:var(--navy-deep);
+    border:none;
+    padding:16px 20px;
+    border-radius:12px;
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    cursor:pointer;
+    width:100%;
+    box-shadow:0 8px 24px -6px rgba(245,180,0,0.5);
+    transition:all 0.2s ease;
+  }
+  .daily-price-cta:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px -4px rgba(245,180,0,0.65);
+  }
+  @media (max-width:500px){
+    .daily-price-cards{
+      grid-template-columns:1fr;
+    }
+  }
+
+  /* ===== includes ===== */
+  .includes{
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--navy-line);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:30px;
+  }
+  .includes h3{
+    font-family:'Oswald', sans-serif;
+    font-size:0.8rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:12px;
+  }
+  .includes ul{
+    list-style:none;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px 14px;
+  }
+  .includes li{
+    font-size:0.82rem;
+    color:var(--ice-dim);
+    display:flex;
+    gap:7px;
+    align-items:flex-start;
+    line-height:1.35;
+  }
+  .includes li::before{
+    content:"✓";
+    color:var(--gold-bright);
+    font-weight:700;
+    flex-shrink:0;
+  }
+
+  /* ===== footer ===== */
+  footer{
+    border-top:1px solid var(--navy-line);
+    padding:24px 0 40px;
+    text-align:center;
+  }
+  .footer-phone{
+    font-family:'Anton', sans-serif;
+    font-size:1.3rem;
+    color:var(--ice);
+    margin-bottom:4px;
+  }
+  .footer-area{
+    font-family:'Oswald', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:16px;
+  }
+  .footer-fine{
+    font-size:0.7rem;
+    color:var(--ice-dim);
+    line-height:1.5;
+    max-width:380px;
+    margin:0 auto;
+  }
+
+  @media (min-width:600px){
+    .cards{flex-direction:row;}
+    .card{flex:1;}
+  }
 </style>
 </head>
 <body>
-<!-- NOTE: Este arquivo foi criado para publicação no Vercel/GitHub.
-     Ele contém uma versão inicial do template. Para garantir 100% do layout,
-     mantenha também o seu `falcao-rastreamento-site.html` como referência. -->
-<header>
-  <div class="container nav-wrap">
-    <a href="#" class="brand">
-      <img src="data:image/jpeg;base64,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" alt="Logo" />
-      <div class="brand-name">
-        Falcão Rastreamento
-        <span>VEICULAR • TEMPO REAL</span>
-      </div>
-    </a>
-    <nav class="links">
-      <a href="#" aria-label="Recursos">Recursos</a>
-      <a href="#" aria-label="Frotas">Frotas</a>
-      <a href="#" aria-label="Localização">Localização</a>
-    </nav>
-    <div>
-      <a class="btn btn-primary" href="#" role="button">Solicitar Demo</a>
-    </div>
-  </div>
-</header>
 
-<main>
-  <section class="hero" style="padding:80px 0;">
-    <div class="container" style="text-align:center;">
-      <h1 style="font-family:var(--ff-display); text-transform:uppercase; color:var(--white);">Falcão Rastreamento
-        <em style="background:linear-gradient(100deg, var(--cyan-300), var(--blue-400)); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:normal;">Veicular</em>
-      </h1>
-      <p class="lead" style="margin-top:18px; color:var(--muted); font-size:1.05rem; max-width:640px; margin-left:auto; margin-right:auto;">
-        Monitoramento em tempo real para frotas e veículos. Conteúdo completo está no seu arquivo original.
+  <div class="radar-field">
+    <div class="radar-ring r1"></div>
+    <div class="radar-ring r2"></div>
+    <div class="radar-ring r3"></div>
+    <div class="radar-sweep"></div>
+    <div class="blip" style="top:9%; left:44%; animation-delay:0s;"></div>
+    <div class="blip" style="top:22%; left:63%; animation-delay:0.8s;"></div>
+    <div class="blip" style="top:17%; left:34%; animation-delay:1.6s;"></div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="hero">
+      <img class="logo" src="falcao-logo.png" alt="Falcão Rastreamento Veicular">
+      <div class="brand-name">FALCÃO</div>
+      <div class="brand-sub">Rastreamento Veicular</div>
+
+      <div class="event-badge">
+        <span class="dot"></span>
+        Somente no dia da inauguração
+      </div>
+
+      <h1 class="headline">Proteja o que<br><span>te move.</span></h1>
+      <p class="hero-copy">
+        Localização em tempo real, bloqueio remoto e recuperação 24h —
+        com o menor preço que a Falcão já ofereceu, exclusivo para quem
+        está aqui hoje.
       </p>
+    </header>
+
+    <div class="urgency-strip">
+      ⚠ Poucas unidades disponíveis · válido apenas hoje
     </div>
-  </section>
-</main>
+
+    <div class="daily-price-section">
+      <div class="daily-price-hero">
+        <h2>Proteja seu veículo por</h2>
+        <p>menos que o preço de um café por dia</p>
+      </div>
+
+      <div class="daily-price-cards">
+        <div class="daily-price-card">
+          <div class="daily-price-vehicle">🏍️ MOTO</div>
+          <div class="daily-price-amount">R$ 1,33</div>
+          <div class="daily-price-small">por dia</div>
+          <div class="price-comparison">
+            <strong>Menos que</strong> um café<br>
+            Protege seu baúdo 24h
+          </div>
+        </div>
+        <div class="daily-price-card">
+          <div class="daily-price-vehicle">🚗 CARRO</div>
+          <div class="daily-price-amount">R$ 2,33</div>
+          <div class="daily-price-small">por dia</div>
+          <div class="price-comparison">
+            <strong>Menos que</strong> uma cerveja<br>
+            Protege seu carro 24h
+          </div>
+        </div>
+      </div>
+
+      <button class="daily-price-cta" onclick="window.open('https://wa.me/5598970180787?text=QUERO%20PROTEGER%20MEU%20VEICULO%20COM%20A%20FALCAO%21', '_blank')">💬 Garantir minha proteção agora</button>
+    </div>
+
+    <div class="section-label">Escolha seu plano</div>
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-top">
+          <img class="plan-icon" src="icons/moto.png" alt="Moto">
+          <div>
+            <div class="plan-name">Moto</div>
+            <span class="plan-tag">Plano digital</span>
+          </div>
+        </div>
+
+        <div class="price-row">
+          <span class="price-old">R$ 59,90</span>
+          <span class="price-new">R$ 39,90<small>/mês</small></span>
+        </div>
+        <p class="price-note"><b>R$ 20 de desconto</b> nas 3 primeiras parcelas</p>
+
+        <div class="divider"></div>
+
+        <div class="install-row">
+          <span class="install-label">Instalação hoje</span>
+          <span class="install-price">
+            <span class="old">R$ 250</span>
+            <span class="new">R$ 150</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <img class="plan-icon" src="icons/carro.png" alt="Carro">
+          <div>
+            <div class="plan-name">Carro</div>
+            <span class="plan-tag">Plano digital</span>
+          </div>
+        </div>
+
+        <div class="price-row">
+          <span class="price-old">R$ 79,90</span>
+          <span class="price-new">R$ 69,90<small>/mês</small></span>
+        </div>
+        <p class="price-note"><b>R$ 20 de desconto</b> nas 3 primeiras parcelas</p>
+
+        <div class="divider"></div>
+
+        <div class="install-row">
+          <span class="install-label">Instalação hoje</span>
+          <span class="install-price">
+            <span class="old">R$ 250</span>
+            <span class="new">R$ 150</span>
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="includes">
+      <h3>O que está incluso</h3>
+      <ul>
+        <li>Sistema na palma da mão</li>
+        <li>Localização em tempo real</li>
+        <li>Bloqueio e desbloqueio remoto</li>
+        <li>Alertas de ignição</li>
+        <li>Bateria interna de backup</li>
+        <li>Histórico de rotas (30 dias)</li>
+        <li>Suporte em casos de Roubo e Furto</li>
+      </ul>
+    </div>
+
+    <div class="cta-block">
+      <a class="cta-btn" href="https://wa.me/5598970180787?text=QUERO%20PROTEGER%20MEU%20VEICULO%20COM%20A%20FALCAO%21" target="_blank" rel="noopener">
+        Garantir minha vaga agora
+      </a>
+      <p class="cta-sub">Vagas limitadas!! APENAS 15 UNIDADES.</p>
+    </div>
+
+    <footer>
+      <div class="footer-phone">(98) 97602-9037</div>
+      <div class="footer-area">Atendemos em toda São Luís – MA</div>
+      <p class="footer-fine">
+        Promoção exclusiva de inauguração, válida somente durante o evento
+        e enquanto durarem as unidades disponíveis. Instalação e adesão
+        sujeitas à disponibilidade de agenda.
+      </p>
+    </footer>
+
+  </div>
 
 </body>
 </html>
-
