@@ -1,8 +1,10 @@
-# TODO - Publicação GitHub + Vercel
+# TODO - Deploy Vercel (site estático)
 
-- [x] Preparar repositório: garantir que o HTML está na raiz como `index.html` (renomear ou copiar)
-- [x] Inicializar git (se ainda não existir), criar commit e definir branch principal
-- [ ] Subir para GitHub (criar/usar repositório remoto)
-- [ ] Preparar deploy no Vercel como site estático
-- [ ] Validar URL do deploy e checar se a página carrega corretamente
+## Passos
+- [ ] Criar `index.html` baseado em `falcao-inauguracao.html` (para a home do Vercel)
+- [ ] Garantir que as referências de imagens continuam corretas (path relativo)
+- [ ] Commit local (mensagem padrão)
+- [ ] Push para o remote (GitHub)
+- [ ] Ajustar/verificar deploy no Vercel
+- [ ] Testar URL final (renderização e carregamento de imagens)
 
