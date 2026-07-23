@@ -517,6 +517,58 @@
     margin:0 auto;
   }
 
+  /* ===== stock alert ===== */
+  .stock-alert{
+    background:linear-gradient(135deg, rgba(230,72,75,0.15), rgba(255,107,107,0.1));
+    border:2px solid var(--red);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:26px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .stock-alert::before{
+    content:"";
+    position:absolute;
+    top:-50%;right:-50%;
+    width:200px;height:200px;
+    background:radial-gradient(circle, rgba(230,72,75,0.2), transparent 70%);
+    pointer-events:none;
+  }
+  .stock-alert > *{
+    position:relative;
+    z-index:1;
+  }
+  .stock-alert h3{
+    font-family:'Anton', sans-serif;
+    font-size:1.4rem;
+    color:var(--red);
+    margin-bottom:6px;
+    letter-spacing:0.02em;
+  }
+  .stock-alert p{
+    font-size:0.9rem;
+    color:var(--ice);
+    line-height:1.5;
+  }
+  .stock-number{
+    font-family:'Anton', sans-serif;
+    font-size:3rem;
+    color:var(--red);
+    line-height:1;
+    margin:10px 0;
+  }
+  .stock-warning{
+    font-family:'Oswald', sans-serif;
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    margin-top:8px;
+    font-weight:700;
+  }
+
   @media (min-width:600px){
     .cards{flex-direction:row;}
     .card{flex:1;}
@@ -590,6 +642,14 @@
     </div>
 
     <div class="section-label">Escolha seu plano</div>
+
+    <div class="stock-alert">
+      <h3>⚡ ALERTA DE ESTOQUE</h3>
+      <p>Restam apenas</p>
+      <div class="stock-number">4</div>
+      <p>unidades disponíveis nesta promoção</p>
+      <div class="stock-warning">Garanta a sua agora!</div>
+    </div>
 
     <div class="cards">
 
